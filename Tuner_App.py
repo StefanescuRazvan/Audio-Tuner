@@ -116,5 +116,4 @@ if __name__ == "__main__":
     window = NoteDetectorApp()
     window.show()
     sys.exit(app.exec())
-*.cpp linguist-vendored
-*.h linguist-vendored
+
