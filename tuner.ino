@@ -1,12 +1,12 @@
 #include <driver/i2s.h>
 #include <arduinoFFT.h>
 
-#define I2S_WS  15  // Word Select (L/R)
-#define I2S_SCK 14  // Bit Clock
-#define I2S_SD  32  // Data In
+#define I2S_WS  15  // Wordselect
+#define I2S_SCK 14  // Clock
+#define I2S_SD  32  // DataIn
 
-#define SAMPLES 1024  // Trebuie să fie putere a lui 2
-#define SAMPLE_RATE 44100 // Rată de eșantionare
+#define SAMPLES 1024 
+#define SAMPLE_RATE 44100 //rată de esantioane
 
 double vReal[SAMPLES];  
 double vImag[SAMPLES];  
@@ -44,22 +44,21 @@ void loop() {
     size_t bytesRead;
     int32_t samples[SAMPLES];
 
-    // Citim datele de la microfon
+    // citire microfon
     i2s_read(I2S_NUM_0, &samples, sizeof(samples), &bytesRead, portMAX_DELAY);
 
     for (int i = 0; i < SAMPLES; i++) {
-        vReal[i] = samples[i] / 2147483648.0;  // Normalizare la [-1,1]
+        vReal[i] = samples[i] / 2147483648.0;  // Normalizare 
         vImag[i] = 0;
     }
 
     // Aplicăm FFT
-    FFT.windowing(FFT_WIN_TYP_HAMMING, FFT_FORWARD); // Fereastră Hamming
-    FFT.compute(FFT_FORWARD);                       // Transformare Fourier
-    FFT.complexToMagnitude();                       // Magnitudine spectru
+    FFT.windowing(FFT_WIN_TYP_HAMMING, FFT_FORWARD); //  Fereastră Hamming
+    FFT.compute(FFT_FORWARD);                       // Fourier
+    FFT.complexToMagnitude();                       // Magnitudine
 
-    // Detectăm frecvența dominantă
+    //frecvența dominantă
     double peakFrequency = FFT.majorPeak();
-    //Serial.print("Frecvență detectată: ");
     Serial.println(peakFrequency);
 
     delay(1000);
